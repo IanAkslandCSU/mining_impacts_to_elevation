@@ -209,10 +209,6 @@ same projection as the dem_diff raster dataset
 
 hint: you may want to explore st_crs to help you here
 
-```{r}
-
-```
-
 
 ### 2c) Use the raster::mask command to mask out all the 
 areas inside of the buffered and reprojected az_mine dataset.
@@ -221,13 +217,18 @@ hint: look at the mask command and try to understand what
 the inverse option does
 
 ```{r}
-#Your code here
+mask_dem_diff_inv <- mask(dem_diff,az_mine_proj,inverse = TRUE)
+mapview(mask_dem_diff_inv)
 ```
 
 
 ### 2d) Use the summary command to look at the summary of
 differences between these two DEMs in areas where there has
 been no mining
+
+```{r}
+summary(mask_dem_diff_inv)
+```
 
 
 ## 3) What does the shape of the "error" distribution look like
@@ -243,7 +244,7 @@ make a plot of the two dems.
 USGS az_mine dataset
 
 ```{r}
-
+mapview(mask_dem_diff)
 ```
 
 
@@ -252,8 +253,9 @@ values from both the unmined and mined regions of your rasters.
 Label these vectors as `unmined_dem` and `mined_dem`. 
 
 ```{r}
+unmined_dem <- getValues(mask_dem_diff_inv)
 
-
+mined_dem <- getValues(mask_dem_diff)
 
 ```
 
@@ -271,4 +273,17 @@ mined_table <- tibble(dem_values = c(unmined_dem,mined_dem),
                       
                     
 ```
+
+
+```{r}
+geom_density_obj <- ggplot( data = mined_table,aes(x=dem_values, color = type)) + 
+    geom_density(NA.rm = TRUE)
+
+geom_density_obj
+
+```
+
+
+
+
 
