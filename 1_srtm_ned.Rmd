@@ -172,8 +172,11 @@ plot(dem_diff)
 You may want to check out the command maxValue and minValue
 
 ```{r}
-
-#YOUR CODE HERE
+az_mine_proj <- st_transform(az_mine,4326)
+mask_dem_diff <- mask(dem_diff,az_mine_proj)
+maxValue(mask_dem_diff)
+minValue(mask_dem_diff)
+mapview(mask_dem_diff)
 ```
 
 
@@ -194,9 +197,9 @@ elevation change?
 
 ```{r}
 
-#Your code here
-
-
+az_mine_buff <- st_buffer(az_mine,5000)
+mapview(az_mine_buff)
+mapview(az_mine)
 ```
 
 
