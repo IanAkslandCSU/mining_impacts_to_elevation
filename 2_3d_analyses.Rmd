@@ -174,7 +174,10 @@ All data for this section should be the data clipped to the mining area
 
 
 ```{r}
-
+az_mine_proj <- st_transform(az_mine,st_crs(az_slope))
+#az_slope_proj <- st_transform(az_slope,4326)
+slope_az_mine <- mask(az_slope,az_mine_proj)
+mapview(slope_az_mine)
 ```
 
 
