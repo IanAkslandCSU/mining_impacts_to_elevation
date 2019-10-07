@@ -184,7 +184,10 @@ mapview(slope_az_mine)
 ## 2) Use the brick code from above to plot slopes for the pre-mining, post-mining, and difference of slope
 
 ```{r}
-
+mines[[3]] <- mask(mines[[3]],az_mine_proj)
+mines[[2]] <- mask(mines[[2]],az_mine_proj)
+mines[[1]] <- mask(mines[[1]],az_mine_proj)
+plot(mines)
 ```
 
 
@@ -192,12 +195,35 @@ mapview(slope_az_mine)
 
 ```{r}
 
+small_az_pre <- aggregate(mines[[1]],fact=1)
+az_matrix_pre <- matrix(raster::extract(small_az_pre,
+                    raster::extent(small_az_pre),buffer=500),
+                    nrow=ncol(small_az_pre), ncol=nrow(small_az_pre))
+
+
+az_matrix_pre %>%
+  sphere_shade(texture = 'desert') %>%
+  add_water(detect_water(az_matrix_pre),color='desert') %>%
+  add_shadow(ray_shade(az_matrix_pre,zscale=2),0.5) %>%
+  add_shadow(ambient_shade(az_matrix_pre)) %>%
+  plot_3d(az_matrix_pre,zscale=10,fov = 0,theta=135,zoom=0.75)
 ```
 
 
 ## 4) Use rayshader to make 3d plot of the post-mining mine
 
 ```{r}
+small_az_post <- aggregate(mines[[2]],fact=1)
+az_matrix_post <- matrix(raster::extract(small_az_post,
+                    raster::extent(small_az_post),buffer=500),
+                    nrow=ncol(small_az_post), ncol=nrow(small_az_post))
 
+
+az_matrix_post %>%
+  sphere_shade(texture = 'desert') %>%
+  add_water(detect_water(az_matrix_post),color='desert') %>%
+  add_shadow(ray_shade(az_matrix_post,zscale=2),0.5) %>%
+  add_shadow(ambient_shade(az_matrix_post)) %>%
+  plot_3d(az_matrix_post,zscale=10,fov = 0,theta=135,zoom=0.75)
 ```
 
